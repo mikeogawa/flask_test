@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <title>{{title}}</title>
+    </head>
+    <body>
+      {%if title == "editor" %}
+      <h1>EDITOR</h1>
+      {% else %}
+      <div class="top">
+        <h1>Food Expirement Management System</h1>
+        <form action="/index" method="POST">
+          <input type="text" name="name" placeholder="Enter name">
+          <input type="submit" name="btn" value="Submit">
+        </form>
+        <p>
+          <button type=“button” onclick="location.href='/logout'">Log Out</button>
+        </p>
+        <img src="/static/images/top.png" alt="top image" width="300px">
+      </div>
+      {% endif %}
+      <div class="input_box">
+        <form action="/index" method="post" id="alsoDel">
+          <p>
+            Product:<br>
+            <input type="text" name="title">
+          </p>
+          <p>
+            Description:<br>
+            <textarea name="desc"></textarea>
+          </p>
+          <p>
+            Expiration Date:<br>
+            <input id="date" type="date" name="exp">
+          </p>
+          <p>
+            <input type="submit" name="btn" value="Add">
+            <span>&nbsp;&nbsp;</span>
+            <input type="submit" name="btn" value="Delete">
+          </p>
+        </form>
+      </div>
+      <div class="list">
+        <p>click to edit!</p>
+        <div id="table">
+          <div id="head">
+            <div id="o"></div>
+            <div id="a">Title</div>
+            <div id="b">Description</div>
+            <div id="c">Expire</div>
+            <div id="d">Last Update</div>
+          </div>
+
+          {% for foo in foods %}
+          <a id="row" href="/edit?id={{foo.id}}" class="{{'expire' if foo.is_expired}}">
+            <input type="checkbox" name="delete" form="alsoDel" value={{foo.id}}>
+            <div id="a">{{foo.title}}</div>
+            <div id="b">{{foo.body}}</div>
+            <div id="c">{{foo.exp}}</div>
+            <div id="d">{{foo.rec}}</div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {%if current_edit != None %}
+      <div id="modal_screen">
+        <div id="modal_block">
+          Editing  ({{current_edit.id}}) -  {{current_edit.title}} to:<br>
+          <form action="/index" method="post">
+            <p>
+              Product:<br>
+              <input type="text" name="title" value="{{current_edit.title}}">
+            </p>
+            <p>
+              Description:<br>
+              <textarea name="desc">{{current_edit.body}}</textarea>
+            </p>
+            <p>
+              Expiration Date:<br>
+              <input id="date" type="date" name="exp" value={{current_edit.date}}>
+            </p>
+            <input type="hidden" name="idx" value={{current_edit.id}}>
+            <p>
+              <input type="submit" name="btn" value="Edit">
+              <span>&nbsp;&nbsp;</span>
+              <input type="submit" name="btn" value="Cancel">
+            </p>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+      {%if error_msg != None %}
+      <div id="modal_screen">
+        <div id="error_block">
+          <p>
+            Error Has Occurred:<br>
+            <span id="errorMsg">{{error_msg}}</span>
+          </p>
+          <p>
+            <button id="cancel"> OK </button>
+          </p>
+        </div>
+      </div>
+      {% endif %}
+      <div align="center">
+        <p>&copy;Mike Ogawa</p>
+      </div>
+    </body>
+</html>
+
+<style>
+
+.top {
+  text-align: center;
+}
+
+.list{
+  text-align: center;
+}
+
+#table{
+  display: table;
+  margin: auto;
+  width: 550px;
+}
+
+#table #head{
+  background-color: #E0FFFF;
+  display:table-row;
+  /* height: 30px;
+  vertical-align: middle; */
+}
+#table #row{
+  display:table-row;
+  text-decoration: none;
+  color:#000000;
+  /* background-color: #FFFFFF; */
+}
+
+/* #table a{
+  color:#000000;
+  text-decoration: none;
+} */
+
+#table a:hover,#table a:focus{
+  background-color: #EFFFFF;
+}
+
+#table a:visited{
+  color:#000000;
+}
+
+#table #head div{
+  display:table-cell;
+  padding:10px 0px;
+}
+
+#table #row div{
+  display:table-cell;
+  padding:10px 0px;
+}
+
+#row.expire{
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+#a{
+  width:50px;
+}
+#a{
+  width:100px;
+}
+#b{
+  width:200px;
+}
+#c{
+  width:100px;
+}
+#d{
+  width:100px;
+}
+
+.input_box{
+  text-align: center;
+}
+
+.input_box form{
+  display:inline-block;
+}
+
+#modal_screen{
+  position: fixed;
+  padding:0;
+  margin:0;
+  top:0px;
+  left:0px;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+#modal_block{
+  position: absolute;
+  display:inline-block;
+  border-radius: 10px;
+  width: 200px;
+  height: 300px;
+  top: 50%;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: -150px;
+  opacity: 1.0;
+  background-color: white;
+  padding:20px;
+  z-index: -1;
+}
+
+#error_block{
+  position: absolute;
+  display:inline-block;
+  border-radius: 10px;
+  width: 200px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: -50px;
+  opacity: 1.0;
+  background-color: white;
+  padding:20px;
+  z-index: -1;
+}
+
+#errorMsg{
+  color:red;
+}
+
+</style>
+
+<script>
+n =  new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+if(document.getElementById("date").value == ""){
+    document.getElementById("date").value = y + "/" + m + "/" + d;
+}
+
+$('#cancel').click(function () {
+    $('#modal_screen').hide();
+});
+</script>

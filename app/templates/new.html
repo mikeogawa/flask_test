@@ -1,0 +1,46 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+  <div class="main">
+    <h1>New</h1>
+    <div class="alert">
+      {% if status == "exist_user" %}
+      <p>That user already exist.</p>
+      {% endif %}
+    </div>
+    <form action="/register" method="post">
+      <p>
+        <input type="text" name="user" placeholder="user name">
+      </p><p>
+        <input type="password" name="password" placeholder="password">
+      </p><p>
+        <input type="submit" value="Register">
+      </p>
+    </form>
+    <p>
+      <a href="/top">Return</a>
+    </p>
+  </div>
+</body>
+</html>
+
+
+<style>
+.alert{
+  color:red;
+}
+
+.main {
+  text-align:center;
+}
+
+.main form{
+  display:inline-block;
+  background-color: #ADD8E6;
+  padding:20px;
+}
+</style>
